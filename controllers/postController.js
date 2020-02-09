@@ -7,8 +7,8 @@ exports.viewCreateScreen = function(req, res) {
 exports.create = function(req, res) {
   let post = new Post(req.body, req.session.user._id)
   post.create().then(function(newId) {
-    req.flash("success","New Post Successfully Created")
-    req.session.save( () => res.redirect(`/post/${newId}`))
+    req.flash("success", "New post successfully created.")
+    req.session.save(() => res.redirect(`/post/${newId}`))
   }).catch(function(errors) {
     errors.forEach(error => req.flash("errors", error))
     req.session.save(() => res.redirect("/create-post"))
@@ -18,7 +18,7 @@ exports.create = function(req, res) {
 exports.viewSingle = async function(req, res) {
   try {
     let post = await Post.findSingleById(req.params.id, req.visitorId)
-    res.render('single-post-screen', {post: post})
+    res.render('single-post-screen', {post: post, title: post.title})
   } catch {
     res.render('404')
   }
@@ -67,19 +67,19 @@ exports.edit = function(req, res) {
   })
 }
 
-exports.delete = function(req,res) {
-  Post.delete(req.params.id, req.visitorId).then( () => {
-    req.flash("success","Post Successfully Deleted")
+exports.delete = function(req, res) {
+  Post.delete(req.params.id, req.visitorId).then(() => {
+    req.flash("success", "Post successfully deleted.")
     req.session.save(() => res.redirect(`/profile/${req.session.user.username}`))
   }).catch(() => {
-    req.flash("errors","You don't have access to perform that action")
+    req.flash("errors", "You do not have permission to perform that action.")
     req.session.save(() => res.redirect("/"))
   })
 }
 
-exports.search = function(req,res) {
-  Post.search(req.body.searchTerm).then((posts) => {
-+     res.json(posts)
+exports.search = function(req, res) {
+  Post.search(req.body.searchTerm).then(posts => {
+    res.json(posts)
   }).catch(() => {
     res.json([])
   })

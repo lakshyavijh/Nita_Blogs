@@ -2,6 +2,19 @@ const User = require('../models/User')
 const Post = require('../models/Post')
 const Follow = require('../models/Follow')
 
+exports.doesUsernameExist = function(req, res) {
+  User.findByUsername(req.body.username).then(function() {
+    res.json(true)
+  }).catch(function() {
+    res.json(false)
+  })
+}
+
+exports.doesEmailExist = async function(req, res) {
+  let emailBool = await User.doesEmailExist(req.body.email)
+  res.json(emailBool)
+}
+
 exports.sharedProfileData = async function(req, res, next) {
   let isVisitorsProfile = false
   let isFollowing = false
@@ -78,7 +91,7 @@ exports.home = async function(req, res) {
   if (req.session.user) {
     // fetch feed of posts for current user
     let posts = await Post.getFeed(req.session.user._id)
-    res.render('home-dashboard',{posts: posts})
+    res.render('home-dashboard', {posts: posts})
   } else {
     res.render('home-guest', {regErrors: req.flash('regErrors')})
   }
@@ -98,6 +111,7 @@ exports.profilePostsScreen = function(req, res) {
   Post.findByAuthorId(req.profileUser._id).then(function(posts) {
     console.log(req.profileUser)
     res.render('profile', {
+      title: `Profile for ${req.profileUser.username}`,
       currentPage: "posts",
       posts: posts,
       profileUsername: req.profileUser.username,
