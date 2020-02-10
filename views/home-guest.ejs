@@ -1,5 +1,4 @@
 <%- include('includes/header') %>
-
 <div class="container py-md-5">
 
   <%- include('includes/flash')%>
@@ -34,12 +33,12 @@
             <label for="password-register" class="text-muted mb-1"><small>Password</small></label>
             <input name="password" id="password-register" class="form-control" type="password" placeholder="Create a password">
           </div>
-          
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
           <button type="submit" class="py-3 mt-4 btn btn-lg btn-success btn-block">Sign up for Nita Blogs</button>
           
         </form>
       </div>
     </div>
   </div>
-  
-  <%- include('includes/footer') %>
+
+  <%- include('includes/foot') %>
